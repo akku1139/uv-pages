@@ -2,7 +2,7 @@
 
 self.__uv$config = {
   prefix: "/uv/service/",
-  bare: "https://bare-server.akku1139.workers.dev/",
+  bare: "https://infrared-264.pages.dev/bare/",
   encodeUrl: Ultraviolet.codec.xor.encode,
   decodeUrl: Ultraviolet.codec.xor.decode,
   handler: "/uv/uv.handler.js",
