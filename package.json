@@ -20,7 +20,7 @@
     "@mercuryworkshop/epoxy-transport": "3.0.1",
     "@titaniumnetwork-dev/ultraviolet": "3.2.10",
     "esbuild": "0.28.2",
-    "eslint": "^8.23.0",
-    "prettier": "^2.7.1"
+    "eslint": "^10.10.0",
+    "prettier": "^3.9.7"
   }
 }
