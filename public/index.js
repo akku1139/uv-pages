@@ -19,16 +19,66 @@ const error = document.getElementById("uv-error");
  * @type {HTMLPreElement}
  */
 const errorCode = document.getElementById("uv-error-code");
+const bareMux = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+function resolveWispUrl() {
+  const url = new URL(__uv$config.wisp || "/wisp/", location.href);
+  if (url.protocol === "http:" || url.protocol === "https:") {
+    url.protocol = location.protocol === "https:" ? "wss:" : "ws:";
+  }
+  return url.toString();
+}
+
+const wispUrl = resolveWispUrl();
+
+function canUseWisp() {
+  if (typeof WebSocket !== "function") return Promise.resolve(false);
+
+  return new Promise((resolve) => {
+    let settled = false;
+    let socket;
+    const timeout = setTimeout(() => finish(false), 5000);
+
+    function finish(result) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      socket?.close();
+      resolve(result);
+    }
+
+    try {
+      socket = new WebSocket(wispUrl);
+      socket.addEventListener("open", () => finish(true), { once: true });
+      socket.addEventListener("error", () => finish(false), { once: true });
+      socket.addEventListener("close", () => finish(false), { once: true });
+    } catch {
+      finish(false);
+    }
+  });
+}
+
+async function configureTransport() {
+  if (await canUseWisp()) {
+    try {
+      await bareMux.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+      return;
+    } catch {}
+  }
+
+  await bareMux.setTransport("/bare/index.mjs", [__uv$config.bare]);
+}
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   try {
     await registerSW();
+    await configureTransport();
   } catch (err) {
-    error.textContent = "Failed to register service worker.";
+    error.textContent = "Failed to initialize the proxy transport.";
     errorCode.textContent = err.toString();
-    throw err;
+    return;
   }
 
   const url = search(address.value, searchEngine.value);

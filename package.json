@@ -7,10 +7,16 @@
     "public",
     "lib"
   ],
-  "peerDependencies": {
-    "@titaniumnetwork-dev/ultraviolet": "^2.0.0"
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "format": "prettier --write .",
+    "lint": "eslint ./scripts/build.mjs ./public/index.js ./public/register-sw.js"
   },
   "devDependencies": {
+    "@mercuryworkshop/bare-mux": "^2.1.9",
+    "@mercuryworkshop/bare-transport": "1.0.0",
+    "@mercuryworkshop/epoxy-transport": "3.0.1",
+    "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
     "eslint": "^8.23.0",
     "prettier": "^2.7.1"
   }
