@@ -15,8 +15,14 @@ const assets = [
   ["uv/uv.sw.js", "@titaniumnetwork-dev/ultraviolet/dist/uv.sw.js"],
   ["baremux/index.js", "@mercuryworkshop/bare-mux/dist/index.js"],
   ["baremux/worker.js", "@mercuryworkshop/bare-mux/dist/worker.js"],
-  ["epoxy/index.mjs", "@mercuryworkshop/epoxy-transport/dist/index.mjs"],
-  ["bare/index.mjs", "@mercuryworkshop/bare-transport/dist/index.mjs"],
+  [
+    "epoxy/index.mjs",
+    "@mercuryworkshop/epoxy-transport/dist/index.mjs",
+  ],
+  [
+    "bare/index.mjs",
+    "@mercuryworkshop/bare-as-module3/dist/index.mjs",
+  ],
 ];
 
 await rm(distDir, { force: true, recursive: true });
@@ -27,7 +33,7 @@ await Promise.all(
     const destination = resolve(distDir, destinationFile);
     await mkdir(dirname(destination), { recursive: true });
     await copyFile(resolve(root, "node_modules", packageFile), destination);
-  })
+  }),
 );
 
 await esbuild.build({

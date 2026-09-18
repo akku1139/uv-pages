@@ -15,9 +15,9 @@
     "lint": "eslint ./scripts/build.mjs ./public/index.js ./public/register-sw.js"
   },
   "devDependencies": {
+    "@mercuryworkshop/bare-as-module3": "2.2.5",
     "@mercuryworkshop/bare-mux": "2.1.9",
-    "@mercuryworkshop/bare-transport": "1.0.0",
-    "@mercuryworkshop/epoxy-transport": "3.0.1",
+    "@mercuryworkshop/epoxy-transport": "2.1.28",
     "@titaniumnetwork-dev/ultraviolet": "3.2.10",
     "esbuild": "0.28.2",
     "eslint": "^10.10.0",
