@@ -19,6 +19,7 @@ const error = document.getElementById("uv-error");
  * @type {HTMLPreElement}
  */
 const errorCode = document.getElementById("uv-error-code");
+const uvConfig = globalThis.__uv$config;
 const bareMuxWorkerUrl = new URL(
   "baremux/worker.js",
   document.baseURI
@@ -28,10 +29,10 @@ const epoxyTransportUrl = new URL(
   document.baseURI
 ).toString();
 const bareTransportUrl = new URL("bare/index.mjs", document.baseURI).toString();
-const bareMux = new BareMux.BareMuxConnection(bareMuxWorkerUrl);
+const bareMux = new globalThis.BareMux.BareMuxConnection(bareMuxWorkerUrl);
 
 function resolveWispUrl() {
-  const url = new URL(__uv$config.wisp || "/wisp/", location.href);
+  const url = new URL(uvConfig.wisp || "/wisp/", location.href);
   if (
     url.protocol === "http:" ||
     url.protocol === "https:" ||
@@ -79,14 +80,14 @@ async function configureTransport() {
     } catch {}
   }
 
-  await bareMux.setTransport(bareTransportUrl, [__uv$config.bare]);
+  await bareMux.setTransport(bareTransportUrl, [uvConfig.bare]);
 }
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   try {
-    await registerSW();
+    await globalThis.registerSW();
     await configureTransport();
   } catch (err) {
     error.textContent = "Failed to initialize the proxy transport.";
@@ -94,6 +95,6 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const url = search(address.value, searchEngine.value);
-  location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
+  const url = globalThis.search(address.value, searchEngine.value);
+  location.href = uvConfig.prefix + uvConfig.encodeUrl(url);
 });

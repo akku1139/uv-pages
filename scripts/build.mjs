@@ -1,32 +1,42 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, cp, mkdir, rm } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import * as esbuild from "esbuild";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const publicDir = resolve(root, "public");
+const distDir = resolve(root, "dist");
 
 const assets = [
-  ["@titaniumnetwork-dev/ultraviolet/dist/sw.js", "public/uv/sw.js"],
-  [
-    "@titaniumnetwork-dev/ultraviolet/dist/uv.bundle.js",
-    "public/uv/uv.bundle.js",
-  ],
-  [
-    "@titaniumnetwork-dev/ultraviolet/dist/uv.client.js",
-    "public/uv/uv.client.js",
-  ],
-  [
-    "@titaniumnetwork-dev/ultraviolet/dist/uv.handler.js",
-    "public/uv/uv.handler.js",
-  ],
-  ["@titaniumnetwork-dev/ultraviolet/dist/uv.sw.js", "public/uv/uv.sw.js"],
-  ["@mercuryworkshop/bare-mux/dist/index.js", "public/baremux/index.js"],
-  ["@mercuryworkshop/bare-mux/dist/worker.js", "public/baremux/worker.js"],
-  ["@mercuryworkshop/epoxy-transport/dist/index.mjs", "public/epoxy/index.mjs"],
-  ["@mercuryworkshop/bare-transport/dist/index.mjs", "public/bare/index.mjs"],
+  ["uv/sw.js", "@titaniumnetwork-dev/ultraviolet/dist/sw.js"],
+  ["uv/uv.bundle.js", "@titaniumnetwork-dev/ultraviolet/dist/uv.bundle.js"],
+  ["uv/uv.client.js", "@titaniumnetwork-dev/ultraviolet/dist/uv.client.js"],
+  ["uv/uv.handler.js", "@titaniumnetwork-dev/ultraviolet/dist/uv.handler.js"],
+  ["uv/uv.sw.js", "@titaniumnetwork-dev/ultraviolet/dist/uv.sw.js"],
+  ["baremux/index.js", "@mercuryworkshop/bare-mux/dist/index.js"],
+  ["baremux/worker.js", "@mercuryworkshop/bare-mux/dist/worker.js"],
+  ["epoxy/index.mjs", "@mercuryworkshop/epoxy-transport/dist/index.mjs"],
+  ["bare/index.mjs", "@mercuryworkshop/bare-transport/dist/index.mjs"],
 ];
 
-for (const [source, destination] of assets) {
-  const destinationPath = resolve(root, destination);
-  await mkdir(dirname(destinationPath), { recursive: true });
-  await copyFile(resolve(root, "node_modules", source), destinationPath);
-}
+await rm(distDir, { force: true, recursive: true });
+await cp(publicDir, distDir, { recursive: true });
+
+await Promise.all(
+  assets.map(async ([destinationFile, packageFile]) => {
+    const destination = resolve(distDir, destinationFile);
+    await mkdir(dirname(destination), { recursive: true });
+    await copyFile(resolve(root, "node_modules", packageFile), destination);
+  })
+);
+
+await esbuild.build({
+  bundle: true,
+  entryPoints: [resolve(publicDir, "index.js")],
+  format: "iife",
+  minify: true,
+  outfile: resolve(distDir, "index.js"),
+  platform: "browser",
+  sourcemap: "linked",
+  target: "es2020",
+});

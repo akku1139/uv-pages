@@ -12,14 +12,14 @@ See [Ultraviolet-App's Wiki](https://github.com/titaniumnetwork-dev/Ultraviolet-
 
 ### Build
 
-The runtime files are generated from the pinned pnpm dependencies. Install dependencies and copy the official Ultraviolet, BareMux, Epoxy, and Bare transport assets into `public/` with:
+The runtime files are generated from the pinned pnpm dependencies. Install dependencies and bundle the frontend into `dist/` with:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm build
 ```
 
-The build keeps the local `public/uv/uv.config.js` instead of replacing it with the vendor default.
+The build copies the static frontend and local `public/uv/uv.config.js` into `dist/`, then bundles `public/index.js` with esbuild. Serve `dist/` as the site root.
 
 ### Transport
 

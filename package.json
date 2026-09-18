@@ -5,12 +5,13 @@
   "type": "module",
   "packageManager": "pnpm@12.3.4",
   "files": [
-    "public",
+    "dist",
     "lib"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
-    "format": "prettier --write .",
+    "prepack": "pnpm build",
+    "format": "prettier --write README.md package.json public/index.html public/index.js public/register-sw.js public/search.js public/uv/uv.config.js scripts",
     "lint": "eslint ./scripts/build.mjs ./public/index.js ./public/register-sw.js"
   },
   "devDependencies": {
@@ -18,6 +19,7 @@
     "@mercuryworkshop/bare-transport": "1.0.0",
     "@mercuryworkshop/epoxy-transport": "3.0.1",
     "@titaniumnetwork-dev/ultraviolet": "3.2.10",
+    "esbuild": "0.28.2",
     "eslint": "^8.23.0",
     "prettier": "^2.7.1"
   }
