@@ -1,2 +1,4 @@
 allowBuilds:
   esbuild: true
+patchedDependencies:
+  '@mercuryworkshop/bare-mux': patches/@mercuryworkshop__bare-mux.patch
