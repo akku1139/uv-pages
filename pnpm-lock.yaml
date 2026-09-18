@@ -105,16 +105,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@mercuryworkshop/bare-mux': 79ba7e97332e1b14598f657b1415c6e4615181a6f644c5711bffc97ba9a7f9e3
-
 importers:
 
   .:
     devDependencies:
       '@mercuryworkshop/bare-mux':
         specifier: 2.1.9
-        version: 2.1.9(patch_hash=79ba7e97332e1b14598f657b1415c6e4615181a6f644c5711bffc97ba9a7f9e3)
+        version: 2.1.9
       '@mercuryworkshop/bare-transport':
         specifier: 1.0.0
         version: 1.0.0
@@ -793,7 +790,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@mercuryworkshop/bare-mux@2.1.9(patch_hash=79ba7e97332e1b14598f657b1415c6e4615181a6f644c5711bffc97ba9a7f9e3)': {}
+  '@mercuryworkshop/bare-mux@2.1.9': {}
 
   '@mercuryworkshop/bare-transport@1.0.0':
     dependencies:
@@ -809,7 +806,7 @@ snapshots:
 
   '@titaniumnetwork-dev/ultraviolet@3.2.10':
     dependencies:
-      '@mercuryworkshop/bare-mux': 2.1.9(patch_hash=79ba7e97332e1b14598f657b1415c6e4615181a6f644c5711bffc97ba9a7f9e3)
+      '@mercuryworkshop/bare-mux': 2.1.9
       astring: 1.9.0
       events: 3.3.0
       idb: 8.0.3
