@@ -2,7 +2,7 @@
 
 self.__uv$config = {
   prefix: "/uv/service/",
-  wisp: "/wisp/",
+  wisp: "https://infrared-188.pages.dev/wisp/",
   bare: "https://infrared-188.pages.dev/bare/",
   encodeUrl: Ultraviolet.codec.xor.encode,
   decodeUrl: Ultraviolet.codec.xor.decode,
