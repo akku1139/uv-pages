@@ -15,7 +15,7 @@ See [Ultraviolet-App's Wiki](https://github.com/titaniumnetwork-dev/Ultraviolet-
 The runtime files are generated from the pinned pnpm dependencies. Install dependencies and copy the official Ultraviolet, BareMux, Epoxy, and Bare transport assets into `public/` with:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm build
 ```
 

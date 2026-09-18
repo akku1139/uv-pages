@@ -19,11 +19,24 @@ const error = document.getElementById("uv-error");
  * @type {HTMLPreElement}
  */
 const errorCode = document.getElementById("uv-error-code");
-const bareMux = new BareMux.BareMuxConnection("/baremux/worker.js");
+const bareMuxWorkerUrl = new URL(
+  "baremux/worker.js",
+  document.baseURI
+).toString();
+const epoxyTransportUrl = new URL(
+  "epoxy/index.mjs",
+  document.baseURI
+).toString();
+const bareTransportUrl = new URL("bare/index.mjs", document.baseURI).toString();
+const bareMux = new BareMux.BareMuxConnection(bareMuxWorkerUrl);
 
 function resolveWispUrl() {
   const url = new URL(__uv$config.wisp || "/wisp/", location.href);
-  if (url.protocol === "http:" || url.protocol === "https:") {
+  if (
+    url.protocol === "http:" ||
+    url.protocol === "https:" ||
+    url.protocol === "ws:"
+  ) {
     url.protocol = location.protocol === "https:" ? "wss:" : "ws:";
   }
   return url.toString();
@@ -61,12 +74,12 @@ function canUseWisp() {
 async function configureTransport() {
   if (await canUseWisp()) {
     try {
-      await bareMux.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+      await bareMux.setTransport(epoxyTransportUrl, [{ wisp: wispUrl }]);
       return;
     } catch {}
   }
 
-  await bareMux.setTransport("/bare/index.mjs", [__uv$config.bare]);
+  await bareMux.setTransport(bareTransportUrl, [__uv$config.bare]);
 }
 
 form.addEventListener("submit", async (event) => {
