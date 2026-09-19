@@ -149,7 +149,7 @@ async function canUseWisp() {
             packet.payload.byteLength >= 2 &&
             packet.payload[0] === 2
           ) {
-            finish(true);
+            finish("v2");
             return;
           }
 
@@ -158,7 +158,7 @@ async function canUseWisp() {
             packet.type === 0x03 &&
             packet.payload.byteLength === 4
           ) {
-            finish(true);
+            finish("v1");
             return;
           }
 
@@ -185,11 +185,16 @@ async function canUseWisp() {
 }
 
 async function configureTransport() {
-  if (await canUseWisp()) {
+  const wispVersion = await canUseWisp();
+
+  if (wispVersion) {
     try {
       await bareMux.setTransport(
         epoxyTransportUrl,
-        [{ wisp: wispUrl }],
+        [{
+          wisp: wispUrl,
+          wisp_v2: wispVersion === "v2",
+        }],
       );
 
       return "wisp";
