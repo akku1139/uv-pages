@@ -10,31 +10,26 @@ See [Ultraviolet-App's Wiki](https://github.com/titaniumnetwork-dev/Ultraviolet-
 
 ## Usage outside of Ultraviolet-App/Static hosting
 
-### Ultraviolet scripts
+### Build
 
-This repository doesn't serve any Ultraviolet scripts. It has a `uv.config.js` to show how Ultraviolet is intended to work with this demo. Ultraviolet-App automatically merges our `uv.config.js` with the remaining UV scripts (`uv.sw.js`, `uv.client.js`, etc). **Some work has to be done in order to make this repository standalone.**
+The runtime files are generated from the pinned pnpm dependencies. Install dependencies and bundle the frontend into `dist/` with:
 
-Here's how to get the remaining scripts for the purpose of hosting this repository:
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+```
 
-1. Go to the [Ultraviolet releases](https://github.com/titaniumnetwork-dev/Ultraviolet/releases/)
-2. Find the latest release
-3. Download the latest tarball (eg. `titaniumnetwork-dev-ultraviolet-x.x.x.tgz`)
-4. Open the tarball, navigate to the `dist` directory, and extract all the scripts with the exception of `uv.config.js` (we already have a configuration) into the `public/uv/` directory in this repository.
-   You may see `.map` files. These are used for debugging. If they're too large, you can omit them without any errors.
+The build copies the static frontend and local `public/uv/uv.config.js` into `dist/`, then bundles `public/index.js` with esbuild. Serve `dist/` as the site root.
 
-   Do not copy `uv.config.js` from the archive!
+### Transport
 
-### Bare server
+The frontend selects Epoxy over Wisp first. The Wisp endpoint is configured in `public/uv/uv.config.js` and defaults to the same origin at `/wisp/`, using `wss://` on HTTPS pages and `ws://` on local HTTP pages. If WebSocket support is unavailable, the endpoint cannot be opened, or Epoxy cannot initialize, BareMux switches to the Bare transport.
 
-You will need to point your Bare server to an external one/a different directory (if you're using reverse proxy software).
+The fallback server is configured in `public/uv/uv.config.js`:
 
-1. Open `public/uv/config.js`
-2. Find the `bare` field
-3. Replace `"/bare/"` with the address of your Bare server
-   A Bare server address hosts the Bare server. For example, to use the Holy Unblocker Bare server at https://uv.holyubofficial.net/ you would update your config to look like this:
+```js
+wisp: "/wisp/",
+bare: "https://example.com/bare/",
+```
 
-   ```js
-       bare: "https://uv.holyubofficial.net/",
-   ```
-
-   You can open Bare server addresses in your browser. You should see something containing fields like the project description, memory usage, supported versions, and the runtime/language.
+A Wisp server must accept WebSocket upgrades at the configured endpoint. A Bare server is only needed for the fallback path.

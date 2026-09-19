@@ -3,15 +3,24 @@
   "main": "lib/index.js",
   "version": "1.0.2",
   "type": "module",
+  "packageManager": "pnpm@12.3.4",
   "files": [
-    "public",
+    "dist",
     "lib"
   ],
-  "peerDependencies": {
-    "@titaniumnetwork-dev/ultraviolet": "^2.0.0"
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "prepack": "pnpm build",
+    "format": "prettier --write README.md package.json public/index.html public/index.js public/register-sw.js public/search.js public/uv/uv.config.js scripts",
+    "lint": "eslint ./scripts/build.mjs ./public/index.js ./public/register-sw.js"
   },
   "devDependencies": {
-    "eslint": "^8.23.0",
-    "prettier": "^2.7.1"
+    "@mercuryworkshop/bare-as-module3": "2.2.5",
+    "@mercuryworkshop/bare-mux": "2.1.9",
+    "@mercuryworkshop/epoxy-transport": "2.1.28",
+    "@titaniumnetwork-dev/ultraviolet": "3.2.10",
+    "esbuild": "0.28.2",
+    "eslint": "^10.10.0",
+    "prettier": "^3.9.7"
   }
 }
