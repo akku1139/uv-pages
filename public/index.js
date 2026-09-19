@@ -185,6 +185,16 @@ async function canUseWisp() {
 }
 
 async function configureTransport() {
+  const currentTransport = await bareMux.getTransport();
+
+  if (currentTransport === epoxyTransportUrl) {
+    return "wisp";
+  }
+
+  if (currentTransport === bareTransportUrl) {
+    return "bare";
+  }
+
   const wispVersion = await canUseWisp();
 
   if (wispVersion) {
